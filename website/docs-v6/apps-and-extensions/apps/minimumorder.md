@@ -7,184 +7,59 @@ description: "Block customers from completing checkout when the cart amount, qua
 
 # Minimum Order Restriction
 
-The Minimum Order Restriction app lets you set rules that a shopper's cart must satisfy before they can proceed to checkout. You can require a minimum cart value, enforce minimum or maximum item quantities, and set category-specific spending thresholds — all without touching any code. If a shopper's cart falls short, they are returned to the cart page with a clear warning explaining what needs to change.
+The Minimum Order Restriction app lets you set rules that must be satisfied before a customer can proceed from the cart to checkout. When any rule is violated, the customer is redirected back to the cart with a plain-English warning message telling them exactly what needs to change. You can enforce a price floor, quantity limits, pack-size requirements, and category-specific spending thresholds — all from a single plugin.
 
-## Requirements
-
-- PHP 8.3.0+
-- Joomla! 6.x
-- J2Commerce 6.x
-
-## Purchase and Download
-
-**Step 1:** Go to our [**J2Commerce** website](https://www.j2commerce.com/) **->** **Apps**
-
-**Step 2:** Locate the **Minimum Order Restriction** App **->** click **View Details** **->** **Add to cart -> Checkout**.
-
-**Step 3:** Go to your **My Downloads** under your profile button at the top right corner and search for the app. Click **Available Versions -> View Files -> Download Now**
-
-## Install the App
-
-This app is a separate add-on available from the [J2Commerce Extensions Store](https://www.j2commerce.com). It is not included with the core J2Commerce 6 component.
-
-1. Purchase and download the `app_minimumorder.zip` package from the J2Commerce website.
-2. In the Joomla admin, go to **System -> Install -> Extensions**.
-3. Upload the plugin ZIP file or use the Install from URL option.
-
-<!-- SCREENSHOT: System -> Install -> Extensions upload screen -->
-
-## Enable the App
-
-Once installed, you need to enable the app. There are **two** ways to access it.
-
-**Option A:** Go to the **J2Commerce** icon at the top right corner **-> Apps**
-
-**Option B:** Go to **Components** on the left sidebar **-> J2Commerce -> Apps**
-
-<!-- SCREENSHOT: J2Commerce Apps list showing Minimum Order Restriction -->
-
-Look for **Minimum Order Restriction**, click the **X**, and it will turn into a green checkmark. The app is now enabled and ready to configure.
-
-## Configure the App
-
-Click on the **Minimum Order Restriction** title next to the green checkmark to open the settings.
-
-:::tip
-
-**Tip:** Click the **Toggle Inline Help** button on any app to reveal a description below each field.
-
-:::
-
-The settings are split into four tabs: **Price-Based Settings**, **Quantity-Based Settings**, **Category-Based Settings**, and **Display**.
+This plugin is a separate add-on available from the [J2Commerce Extensions Store](https://www.j2commerce.com). It is not included with the core J2Commerce component.
 
 ---
 
-### Price-Based Settings tab
+## Installation
 
-<!-- SCREENSHOT: Price-Based Settings fieldset in plugin configuration -->
+1. Purchase and download the `plg_j2commerce_app_minimumorder.zip` package from the J2Commerce website.
+2. Go to **System** -> **Install** -> **Extensions** in the Joomla administrator.
+3. Upload the zip file using the **Upload Package File** tab.
+4. The plugin installs automatically. You will see the message: "Plugin 'Minimum Order Restriction' installed. Enable it via the Joomla Plugin Manager."
+5. Go to **System** -> **Manage** -> **Plugins**.
+6. Search for **Minimum Order Restriction**.
+7. Click the status icon to enable it (it should turn green).
 
-This tab controls whether a minimum cart value is required before checkout.
+<!-- SCREENSHOT: Plugin Manager search results showing the Minimum Order Restriction plugin with enabled status -->
 
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Enable Price-Based Restriction** | Turn the minimum order value check on or off. | Yes |
-| **Calculation Type** | Which amount to compare against your minimum: **Subtotal** (products only, before shipping and tax) or **Total** (the full order amount). | Subtotal |
-| **Include Discount in Order Total?** | Visible when **Calculation Type** is set to **Total**. Choose **Include Discount** to apply the check after any coupon is deducted, or **Exclude Discount** to check the total before discounts. | Include Discount |
-| **Minimum Subtotal / Total** | The minimum amount the cart must reach. Shoppers below this value are returned to the cart with a warning. Set to `0` to disable the check without turning off the whole section. | 0 |
-| **Debug Mode** | Write blocking decisions to the Joomla log directory. Disable in production. | No |
+Once enabled, open the plugin to configure your rules — go to **J2Commerce** -> **Apps** and click **Minimum Order Restriction**.
 
-**Example:** Set **Calculation Type** to **Subtotal** and **Minimum Subtotal / Total** to `50` to require at least $50 in products before checkout can proceed.
-
----
-
-### Quantity-Based Settings tab
-
-<!-- SCREENSHOT: Quantity-Based Settings fieldset in plugin configuration -->
-
-This tab controls how many items (total or per product line) must be in the cart.
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Enable Quantity-Based Restriction** | Turn the quantity check on or off. | Yes |
-| **Quantity Must Be a Multiple of Minimum?** | When set to **Yes**, the quantity must be a multiple of the minimum value (e.g. minimum 6 allows 6, 12, 18, 24...). | Yes |
-| **Quantity Restriction Applies To** | **Total Cart Quantity** checks the sum of all items in the cart. **Per-Item Quantity** checks each product line individually. | Total Cart Quantity |
-| **Minimum Quantity** | The lowest quantity allowed. Set to `0` to skip the minimum check. | 0 |
-| **Maximum Quantity** | The highest quantity allowed. Set to `0` to skip the maximum check. | 0 |
-
-**Example:** Set **Quantity Restriction Applies To** to **Total Cart Quantity**, **Minimum Quantity** to `3`, and **Maximum Quantity** to `0` to require at least 3 items in the cart with no upper limit.
+<!-- SCREENSHOT: J2Commerce Apps screen showing Minimum Order Restriction tile -->
 
 ---
 
-### Category-Based Settings tab
+## Overview of the Three Restriction Modes
 
-<!-- SCREENSHOT: Category-Based Settings fieldset in plugin configuration -->
+The plugin has three independently enabled restriction modes. Each mode has its own on/off toggle, so you can use one, two, or all three at the same time.
 
-This tab lets you require a minimum spend specifically on products from chosen Joomla content categories. This is useful when you sell a mix of product types and only want to enforce a minimum on a particular range.
+| Mode | What it checks |
+|------|----------------|
+| **Price-Based** | Cart subtotal or order total versus a minimum amount |
+| **Quantity-Based** | Total cart quantity or per-item quantity versus minimum/maximum values |
+| **Category-Based** | Combined value of items from specific Joomla content categories |
 
-| Field | Description |
-|-------|-------------|
-| **Restricted Categories** | Select one or more Joomla content categories. Products belonging to these categories (including their subcategories) count toward the category minimum. |
-| **Minimum Category Order Value** | The combined value of items from the selected categories must reach this amount. If the shopper has qualifying products but their combined value is below this threshold, checkout is blocked. |
-
-:::info
-
-**Note:** The category restriction only triggers when a shopper's cart actually contains products from the selected categories. If their cart has no matching products, the check is skipped entirely.
-
-:::
-
-**Example:** Select your **Wholesale** category and set **Minimum Category Order Value** to `100` to require that wholesale items total at least $100 before checkout.
+Checks run in order: price first, then quantity, then category. The customer is redirected on the first failure — they will not see multiple errors at once.
 
 ---
 
-### Display tab
+## How Enforcement Works
 
-<!-- SCREENSHOT: Display fieldset in plugin configuration -->
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Template Framework** | Choose the front-end framework used to render restriction notices so the warning matches your site template. Select **Bootstrap 5** for Bootstrap-based templates or **UIkit** for UIkit-based templates. | Bootstrap 5 |
-
----
-
-## Setting Per-Product Quantity Limits
-
-In addition to the global rules above, you can override quantity limits on individual products. This is useful when a specific product must always be ordered in a set amount, regardless of global settings.
-
-### Edit a Product
-
-There are **three** ways to access products.
-
-**Option A:** Go to the **J2Commerce** icon at the top right corner **-> Catalog -> Products**
-
-**Option B:** Go to **Components** on the left sidebar **-> J2Commerce -> Products**
-
-**Option C:** Go to **Content -> Categories ->** Find the category and then click inside the published article section
-
-<!-- SCREENSHOT: Product list view -->
-
-Open a product **-> J2Commerce** tab **-> Apps** tab. Locate the **Minimum Order Restriction** section.
-
-<!-- SCREENSHOT: Product edit screen, Apps tab, Minimum Order Restriction section -->
-
-### Per-Product Quantity Fields
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Enable Per-Product Quantity Restriction** | When enabled, this product uses its own minimum and maximum quantities and is excluded from the global per-item maximum. | No |
-| **Product Minimum Quantity** | Minimum number of units of this product that must be in the cart at checkout. | 0 |
-| **Product Maximum Quantity** | Maximum number of units of this product allowed in the cart at checkout. | 0 |
-
-:::info
-
-**Note:** Per-product limits take priority over the global quantity rules. When a product has its own restriction enabled, the global per-item maximum does not apply to that product.
-
-:::
-
-**Save** the product after making changes.
-
----
-
-## How It Works
+The plugin enforces your rules in two places, so customers get early feedback and the limits cannot be bypassed.
 
 ### At the cart drawer
 
-When a shopper opens the cart drawer, J2Commerce checks the current cart against your configured rules. If any rule is violated, a warning banner appears next to the **Checkout** button and the button is disabled until the cart satisfies all restrictions.
+When a shopper opens the cart drawer (the slide-out cart), the plugin checks the current cart against your rules. If any rule is violated, a warning appears and the **Checkout** button is disabled until the cart satisfies every restriction. This gives customers immediate, on-page feedback before they try to continue.
 
 ### At checkout
 
-When a shopper clicks **Checkout**, J2Commerce re-checks all rules on the server. If a violation is found, the shopper is redirected back to the cart page with a warning message describing which rule was not met. This server-side check is the definitive enforcement — even if a shopper bypasses the front-end warning, the checkout redirect still fires.
-
-### Restriction evaluation order
-
-The plugin checks rules in this sequence and stops at the first failing group:
-
-1. **Price-Based** — Is the cart value high enough?
-2. **Quantity-Based** — Are the quantity rules satisfied?
-3. **Category-Based** — Is the category spend threshold met?
+When a shopper proceeds to checkout, the plugin re-checks every rule on the server. If a rule is not met, the shopper is redirected back to the cart page with a plain-English warning describing exactly what needs to change. This server-side check is the definitive enforcement — even if a shopper bypasses the front-end warning (for example with JavaScript disabled), the checkout redirect still fires.
 
 ### Warning messages shoppers see
 
-The exact text depends on which rule was violated:
+The exact message depends on which rule was violated:
 
 - "Minimum order should be [amount] or above."
 - "Total cart quantity should be [number] or above."
@@ -195,69 +70,250 @@ The exact text depends on which rule was violated:
 - "Total cart quantity must be a multiple of [number]."
 - "Minimum category order value should be [amount] or above."
 
-Multiple violations from the same check group are shown as a list.
+---
+
+## Price-Based Restriction
+
+This mode blocks checkout when the cart value is too low.
+
+### Step 1: Enable price-based restriction
+
+In the plugin's **Price-Based Settings** tab, set **Enable Price-Based Restriction** to **Yes**.
+
+<!-- SCREENSHOT: Price-Based Settings tab with Enable Price-Based Restriction toggled to Yes -->
+
+### Step 2: Choose what to measure
+
+Use the **Calculation Type** dropdown to pick what the minimum applies to:
+
+| Option | What it uses |
+|--------|-------------|
+| **Subtotal** | The cart subtotal before taxes, shipping, and discounts |
+| **Total** | The final order total (after taxes, shipping, and discounts) |
+
+If you choose **Total**, an extra field appears: **Include Discount in Order Total?**
+
+| Option | Behaviour |
+|--------|-----------|
+| **Include Discount** (default) | The minimum is compared against the total after coupons |
+| **Exclude Discount** | The minimum is compared against the total before coupons are subtracted |
+
+Use **Exclude Discount** if you want the minimum to apply to the full product value, not after coupon savings.
+
+### Step 3: Set the minimum amount
+
+Enter the amount in **Minimum Subtotal / Total**. Use the same currency your store displays. For example, enter `50` for a $50 minimum.
+
+<!-- SCREENSHOT: Price-Based Settings tab showing Calculation Type set to Subtotal and Minimum Subtotal / Total field set to 50 -->
+
+### Common use cases
+
+- **Wholesale store:** Set a $100 minimum subtotal so that small retail-quantity orders are automatically blocked.
+- **Free shipping threshold enforcement:** Pair a minimum total with your free shipping rule — if the total is under the free shipping threshold, customers are nudged to add more items before proceeding.
 
 ---
 
-## Tips
+## Quantity-Based Restriction
 
-- **Start with the price-based rule** — a minimum order value is the most common requirement and the simplest to configure.
-- **Use per-product limits for bundle products** — if a product is always sold in packs of 6, enable per-product restriction on that product and set minimum to `6` with **Quantity Must Be a Multiple of Minimum** to **Yes**.
-- **Category restrictions complement global rules** — you can have both a global minimum cart value and a category-specific minimum active at the same time.
-- **Match the template framework to your site** — choose Bootstrap 5 if your template is built on Bootstrap, or UIkit if you use a UIkit-based template, so warning banners look native.
-- **Disable unused restriction types** — if you only need a minimum order value, turn off **Enable Quantity-Based Restriction** to avoid unexpected blocks.
-- **Use debug mode during setup** — enable **Debug Mode** temporarily to confirm the plugin is evaluating orders correctly, then disable it before going live.
+This mode blocks checkout based on how many units are in the cart.
+
+### Step 1: Enable quantity-based restriction
+
+In the **Quantity-Based Settings** tab, set **Enable Quantity-Based Restriction** to **Yes**.
+
+<!-- SCREENSHOT: Quantity-Based Settings tab with the enable toggle set to Yes and all fields visible -->
+
+### Step 2: Choose what the limits apply to
+
+Use **Quantity Restriction Applies To** to decide the scope:
+
+| Option | What it checks |
+|--------|----------------|
+| **Total Cart Quantity** | The combined quantity across all line items in the cart |
+| **Per-Item Quantity** | The quantity of each individual line item |
+
+### Step 3: Set minimum and maximum quantities
+
+- **Minimum Quantity** — the smallest allowed quantity. Leave at `0` to skip the minimum check.
+- **Maximum Quantity** — the largest allowed quantity. Leave at `0` to skip the maximum check.
+
+### Step 4: Pack-size enforcement (optional)
+
+Set **Quantity Must Be a Multiple of Minimum?** to **Yes** if you sell in packs. When enabled, the quantity must be an exact multiple of the minimum. For example, with minimum set to `6`, allowed quantities are 6, 12, 18, 24, and so on. Any other quantity triggers the warning and redirects to cart.
+
+This applies to whichever scope you chose in Step 2 — cart total quantity or per-item quantity.
+
+<!-- SCREENSHOT: Quantity-Based Settings showing Minimum Quantity 6, Maximum Quantity 0, Quantity Must Be a Multiple of Minimum set to Yes -->
+
+### Common use cases
+
+- **Minimum purchase quantity of 2:** Set scope to **Total Cart Quantity**, minimum to `2`, maximum to `0`.
+- **Bulk packs only:** Set scope to **Per-Item Quantity**, minimum to `6`, maximum to `0`, and enable the multiple requirement.
+- **Event ticket cap:** Set scope to **Total Cart Quantity**, minimum to `1`, maximum to `10` to limit large bulk purchases at checkout.
+
+---
+
+## Category-Based Restriction
+
+This mode blocks checkout when items from specific Joomla content categories do not reach a minimum combined value. It is useful for stores that carry products across multiple categories and want to require a minimum spend within a particular product range.
+
+### Step 1: Select the categories
+
+In the **Category-Based Settings** tab, click the **Restricted Categories** field and choose one or more Joomla content categories. The check automatically includes products from any descendant categories of those you select — you do not need to list child categories individually.
+
+<!-- SCREENSHOT: Category-Based Settings tab with the Restricted Categories picker open showing a category tree -->
+
+### Step 2: Set the minimum value
+
+Enter the amount in **Minimum Category Order Value**. The plugin adds up the line totals (quantity multiplied by unit price) for every item whose article belongs to the selected categories. If that combined value is below the minimum, checkout is blocked.
+
+<!-- SCREENSHOT: Category-Based Settings tab with Minimum Category Order Value set to 75 -->
+
+### How the value is calculated
+
+- Only items from `com_content` (Joomla articles) are counted.
+- The unit price used is the base item price plus any option add-ons.
+- If the cart contains no items from the restricted categories at all, the check is skipped — the customer is not blocked.
+- Descendant categories are matched by walking up the category tree up to 20 levels deep.
+
+### Common use case
+
+A store sells general merchandise and specialty tools. They want customers to spend at least $50 on specialty tools before checkout. Configure the Specialty Tools category here and set the minimum to `50`. Orders with no specialty tool items proceed normally; orders with specialty tools totalling under $50 are blocked.
+
+---
+
+## Per-Product Quantity Override
+
+Any individual product can opt into its own minimum and maximum quantity rules. When a product uses its own limits, it is also exempt from the global per-item maximum set in the Quantity-Based Settings tab.
+
+### Where to find these fields
+
+1. Go to **J2Commerce** -> **Catalog** -> **Products**.
+2. Open the product you want to configure.
+3. Click the **Apps** tab in the product editor.
+4. Find the **Quantity Restriction** section provided by the Minimum Order Restriction plugin.
+
+<!-- SCREENSHOT: Product editor Apps tab showing the Quantity Restriction section with three fields -->
+
+### Available fields
+
+| Field | Description | Default |
+|-------|-------------|---------|
+| **Enable Per-Product Quantity Restriction** | Activates this product's own limits. Must be set to **Yes** for the fields below to take effect. | No |
+| **Product Minimum Quantity** | Minimum units of this product required in the cart at checkout. Set to `0` to skip. | 0 |
+| **Product Maximum Quantity** | Maximum units of this product allowed in the cart at checkout. Set to `0` to skip. | 0 |
+
+### When to use per-product overrides
+
+- A product is sold individually and cannot be purchased in bulk — set maximum to `1`.
+- A component or part requires purchasing at least 2 units — set minimum to `2`.
+- A limited-edition item should not override general store limits but needs its own cap — enable the override and set only the maximum.
+
+The per-product check runs as part of the quantity restriction phase. If the global quantity restriction is disabled in the plugin settings, per-product overrides are still enforced.
+
+---
+
+## Configuration Reference
+
+### Price-Based Settings
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Enable Price-Based Restriction** | Yes / No | Yes | Activates price-based checkout blocking |
+| **Calculation Type** | Subtotal / Total | Subtotal | The cart value to compare against the minimum |
+| **Include Discount in Order Total?** | Include Discount / Exclude Discount | Include Discount | Visible only when Calculation Type is Total |
+| **Minimum Subtotal / Total** | Number | 0 | Minimum amount required; use `0` to disable |
+
+### Quantity-Based Settings
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Enable Quantity-Based Restriction** | Yes / No | Yes | Activates quantity-based checkout blocking |
+| **Quantity Restriction Applies To** | Total Cart Quantity / Per-Item Quantity | Total Cart Quantity | Whether limits apply to the whole cart or each line item |
+| **Quantity Must Be a Multiple of Minimum?** | Yes / No | Yes | Enforces pack-size ordering |
+| **Minimum Quantity** | Integer | 0 | Minimum units required; use `0` to skip |
+| **Maximum Quantity** | Integer | 0 | Maximum units allowed; use `0` to skip |
+
+### Category-Based Settings
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Restricted Categories** | Category picker (multiple) | — | Joomla content categories that count toward the minimum |
+| **Minimum Category Order Value** | Number | 0 | Minimum combined value of items from those categories |
+
+### Advanced
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Debug Mode** | Yes / No | No | Writes every blocking decision to the Joomla log file |
+
+### Display
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Template Framework** | Bootstrap 5 / UIkit | Bootstrap 5 | The front-end framework used to render the cart-drawer warning notice, so it matches your site template |
+
+---
+
+## What Changed from J2Store
+
+If you used Minimum Order Restriction with J2Store v4, here is what is different in J2Commerce 6:
+
+- **No legacy Admin Apps view.** The plugin no longer adds a tab to the old J2Store backend apps area. Configuration is done entirely through the standard Joomla Plugin Manager or the **J2Commerce** -> **Apps** screen.
+- **XML-based product fields.** Per-product minimum/maximum fields are rendered via Joomla's form API. There is no jQuery dependency for displaying these fields in the product editor.
+- **Parameterised SQL.** All database queries use bound parameters — no raw string concatenation.
+- **Per-product max exemption works correctly.** In J2Store v4, enabling a per-product override did not always exempt the product from the global per-item maximum. In J2Commerce 6, enabling **Enable Per-Product Quantity Restriction** on any product correctly skips the global per-item maximum check for that product, even when the product itself has no maximum set.
 
 ---
 
 ## Troubleshooting
 
-### Shopper can still reach checkout despite a restriction being set
+### Customers can still check out below the minimum amount
 
-**Cause:** The app may be disabled, or the minimum value is set to `0`.
-
-**Solution:**
-
-1. Go to **J2Commerce -> Apps**.
-2. Verify **Minimum Order Restriction** shows a green checkmark (enabled).
-3. Open the app settings and confirm the relevant restriction section is set to **Yes**.
-4. Check that the **Minimum Subtotal / Total** or **Minimum Quantity** field contains a value greater than `0`.
-
-### Warning appears but the shopper can still click Checkout
-
-**Cause:** The front-end cart drawer warning is informational only when JavaScript is disabled or blocked. The server-side redirect at checkout is the enforced check.
-
-**Solution:** Verify that JavaScript is running in the shopper's browser. The checkout redirect will still fire on the server side regardless of whether the drawer warning rendered.
-
-### Per-product limits are being ignored
-
-**Cause:** The **Enable Per-Product Quantity Restriction** toggle is off on the product.
+**Possible cause:** The plugin is installed but not enabled.
 
 **Solution:**
+1. Go to **System** -> **Manage** -> **Plugins**.
+2. Search for **Minimum Order Restriction**.
+3. Confirm the status is green (enabled).
+4. Open the plugin and check that **Enable Price-Based Restriction** is set to **Yes** and that **Minimum Subtotal / Total** is greater than `0`.
 
-1. Go to **J2Commerce -> Catalog -> Products** and open the product.
-2. Go to the **J2Commerce** tab **-> Apps** tab **-> Minimum Order Restriction** section.
-3. Set **Enable Per-Product Quantity Restriction** to **Yes**.
-4. Enter the desired **Product Minimum Quantity** and/or **Product Maximum Quantity**.
-5. Click **Save**.
+### The amount check passes but the cart total looks correct
 
-### Category restriction never triggers
+**Possible cause:** You have **Calculation Type** set to **Total** and the order total includes taxes or shipping that push it above the threshold, even though the product subtotal is lower.
 
-**Cause:** The cart contains no products from the selected categories, or no categories are selected.
+**Solution:** Switch **Calculation Type** to **Subtotal** if you want the check to run against product prices only, before taxes and shipping are added.
 
-**Solution:**
+Alternatively, if you are using the **Total** calculation and coupons apply, check the **Include Discount in Order Total?** setting. With **Include Discount** active, a coupon can reduce the total below the threshold. Switch to **Exclude Discount** if you do not want coupons to affect this check.
 
-1. Open the app settings and go to **Category-Based Settings**.
-2. Confirm that at least one category is selected in **Restricted Categories**.
-3. Confirm **Minimum Category Order Value** is greater than `0`.
-4. Verify the product's Joomla article belongs to one of the selected categories (or a subcategory of one).
+### The quantity multiple check is not triggering
 
-### Warning banner style does not match the site
+**Possible cause:** **Quantity Must Be a Multiple of Minimum?** is set to **Yes**, but **Minimum Quantity** is `0`.
 
-**Cause:** The **Template Framework** setting does not match the active site template.
+**Solution:** Enter a value greater than `0` in **Minimum Quantity**. The multiple check requires a non-zero minimum to divide by.
 
-**Solution:**
+### Category restriction never blocks checkout
 
-1. Open the app settings and go to **Display**.
-2. Change **Template Framework** to match your site's front-end framework (**Bootstrap 5** or **UIkit**).
-3. Click **Save**.
+**Possible cause 1:** The products in the cart do not use Joomla articles as their source. The category restriction only counts items sourced from `com_content`.
+
+**Possible cause 2:** No categories are selected in the **Restricted Categories** field, or the minimum value is `0`.
+
+**Solution:** Open the plugin, go to **Category-Based Settings**, confirm that at least one category is selected and that **Minimum Category Order Value** is greater than `0`.
+
+### Finding the debug log
+
+When **Debug Mode** is set to **Yes**, the plugin writes a log entry every time it blocks a checkout. The log file is located at:
+
+```
+[joomla-root]/administrator/logs/plg_j2commerce_app_minimumorder.php
+```
+
+Each entry includes the reason the checkout was blocked. Review this file if a restriction appears to be firing incorrectly or not firing at all. Disable Debug Mode in production once you have confirmed the rules are working correctly.
+
+---
+
+## Related Topics
+
+- [Apps and Extensions Overview](../index.md)
+- [Quantity Pricing](quantityprice.md)
+- [Bulk Discount](app_bulkdiscount.md)
