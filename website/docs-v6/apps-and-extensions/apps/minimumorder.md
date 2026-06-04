@@ -45,6 +45,33 @@ Checks run in order: price first, then quantity, then category. The customer is 
 
 ---
 
+## How Enforcement Works
+
+The plugin enforces your rules in two places, so customers get early feedback and the limits cannot be bypassed.
+
+### At the cart drawer
+
+When a shopper opens the cart drawer (the slide-out cart), the plugin checks the current cart against your rules. If any rule is violated, a warning appears and the **Checkout** button is disabled until the cart satisfies every restriction. This gives customers immediate, on-page feedback before they try to continue.
+
+### At checkout
+
+When a shopper proceeds to checkout, the plugin re-checks every rule on the server. If a rule is not met, the shopper is redirected back to the cart page with a plain-English warning describing exactly what needs to change. This server-side check is the definitive enforcement — even if a shopper bypasses the front-end warning (for example with JavaScript disabled), the checkout redirect still fires.
+
+### Warning messages shoppers see
+
+The exact message depends on which rule was violated:
+
+- "Minimum order should be [amount] or above."
+- "Total cart quantity should be [number] or above."
+- "Total cart quantity should be [number] or below."
+- "You have reached the minimum restriction for [product name] (minimum of [number])."
+- "You have reached the maximum restriction for [product name] (maximum of [number])."
+- "[Product name] must be ordered in multiples of [number]."
+- "Total cart quantity must be a multiple of [number]."
+- "Minimum category order value should be [amount] or above."
+
+---
+
 ## Price-Based Restriction
 
 This mode blocks checkout when the cart value is too low.
@@ -219,6 +246,12 @@ The per-product check runs as part of the quantity restriction phase. If the glo
 | Field | Options | Default | Description |
 |-------|---------|---------|-------------|
 | **Debug Mode** | Yes / No | No | Writes every blocking decision to the Joomla log file |
+
+### Display
+
+| Field | Options | Default | Description |
+|-------|---------|---------|-------------|
+| **Template Framework** | Bootstrap 5 / UIkit | Bootstrap 5 | The front-end framework used to render the cart-drawer warning notice, so it matches your site template |
 
 ---
 
