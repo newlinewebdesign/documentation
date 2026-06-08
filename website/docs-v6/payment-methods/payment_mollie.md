@@ -7,7 +7,7 @@ description: "Accept iDEAL, Bancontact, credit cards, Klarna, Apple Pay, and mor
 
 # Mollie Payments
 
-Mollie is a Dutch payment service provider popular across Europe that offers a single integration covering a wide range of payment methods — iDEAL, Bancontact, credit cards, SOFORT Banking, Apple Pay, Klarna Pay Later, Klarna Slice It, KBC/CBC, Belfius, EPS, Giropay, Przelewy24, Trustly, Twint, Voucher, and more. Rather than setting up separate payment gateways for each country, you activate one Mollie account and Mollie surfaces the right methods automatically based on the buyer's location and currency.
+Mollie is a Dutch payment service provider popular across Europe that offers a single integration covering a wide range of payment methods — iDEAL, Bancontact, credit cards, SOFORT Banking, Apple Pay, Klarna Pay Later, Klarna Slice It, KBC/CBC, Belfius, EPS, Giropay, Przelewy24, Trustly, Twint, Voucher, and more. Rather than setting up separate payment gateways for each country, you connect one Mollie account and Mollie surfaces the right methods automatically based on the buyer's location and currency.
 
 ## Requirements
 
@@ -15,17 +15,16 @@ Mollie is a Dutch payment service provider popular across Europe that offers a s
 - Joomla 6.0 or later
 - A Mollie account (free to create; see below)
 - Your business must be based in a country Mollie supports — primarily the EU, UK, Norway, and Switzerland
-- Your site must be publicly reachable over HTTPS so Mollie can deliver webhook notifications
+- Your site must be publicly reachable over HTTPS so Mollie can deliver payment notifications
 
 ## Purchase and Download
 
 This plugin is a separate add-on available from the [J2Commerce Extensions Store](https://www.j2commerce.com). It is not included with the core J2Commerce 6 component.
 
-**Step 1:** Go to the [J2Commerce website](https://www.j2commerce.com) **->** **Payment Plugins**
-
-**Step 2:** Locate the **Mollie Payments** plugin **->** click **View Details** **->** **Add to Cart** **->** **Checkout**
-
-**Step 3:** Go to **My Downloads** under your profile button at the top right corner. Click **Available Versions -> View Files -> Download Now**
+1. Go to the [J2Commerce website](https://www.j2commerce.com) and locate **Mollie Payments**.
+2. Add it to your cart and complete checkout.
+3. Go to **My Downloads** under your account profile and find the plugin.
+4. Click **Available Versions** -> **View Files** -> **Download Now** to download the ZIP file.
 
 ## Set Up a Mollie Account
 
@@ -49,16 +48,12 @@ After your account is active:
 4. Copy both keys and store them safely.
 
 :::tip
-
 The key prefix tells you the environment — there is no separate sandbox toggle in the plugin. Enter a `test_` key to run in test mode; enter your `live_` key to accept real payments. You switch environments simply by changing the key.
-
 :::
 
 <!-- SCREENSHOT: Mollie Dashboard > Developers > API keys showing live_ and test_ keys -->
 
 ## Install the Plugin
-
-Install Mollie Payments using the standard Joomla installer.
 
 1. In the Joomla admin, go to **System** -> **Install** -> **Extensions**.
 2. Click **Upload Package File** and select the Mollie Payments ZIP file you downloaded.
@@ -70,9 +65,9 @@ Install Mollie Payments using the standard Joomla installer.
 
 Once installed, enable the plugin so it appears at checkout.
 
-**Option A:** Go to the **J2Commerce** icon at the top right corner **-> Payments**
+**Option A:** Go to the **J2Commerce** icon at the top right corner -> **Payments**
 
-**Option B:** Go to **Components** on the left sidebar **-> J2Commerce -> Payments**
+**Option B:** Go to **Components** on the left sidebar -> **J2Commerce** -> **Payments**
 
 Look for **Mollie Payments**, click the red **X**, and it turns into a green checkmark. The plugin is now enabled and ready for configuration.
 
@@ -83,9 +78,7 @@ Look for **Mollie Payments**, click the red **X**, and it turns into a green che
 Click the **Mollie Payments** title next to the green checkmark to open settings.
 
 :::tip
-
 Click the **Toggle Inline Help** button at the top of any plugin screen to reveal a description below every field.
-
 :::
 
 <!-- SCREENSHOT: Mollie plugin settings page with Toggle Inline Help highlighted -->
@@ -148,28 +141,48 @@ The following methods are available in the selector:
 | **Trustly** | Nordics and Europe |
 
 :::info
-
 Payment methods must also be activated in your Mollie Dashboard before they appear at checkout — enabling them here only filters the list; it does not activate them at Mollie. See [Activate Payment Methods in Mollie](#activate-payment-methods-in-mollie) below.
-
 :::
 
 **Translate Payment Method Names** — When set to **Yes**, method names are looked up from language overrides using the `PLG_J2COMMERCE_PAYMENT_MOLLIE_METHOD_*` key prefix, letting you rename methods in your site's language. When set to **No** (default), method names come directly from Mollie.
 
 ---
 
+### Saved Cards
+
+**Enable Saved Cards** — When set to **Yes** (the default), logged-in customers can save their payment method after checkout for faster future purchases. Saved cards are also used for automatic subscription renewals.
+
+Saved payment methods are displayed to the customer on their next visit so they can check out without re-entering details.
+
+---
+
+### Order Status Settings
+
+**Confirmed Payment Status** — The J2Commerce order status to apply when Mollie confirms a successful payment. Default: Confirmed.
+
+**Change Status on Refund** — When set to **Yes**, J2Commerce automatically updates the order status after a refund is processed.
+
+**Refund Order Status** — The status to apply after a successful refund. This field only appears when **Change Status on Refund** is set to **Yes**.
+
+---
+
 ### Webhook URL
 
-**Webhook URL** — This read-only field displays the URL that Mollie uses to notify your store when a payment status changes. The URL is generated automatically based on your site address.
+**Mollie Webhook URL** / **Webhook URL** — This read-only field displays the URL that Mollie uses to notify your store when a payment status changes. The URL is generated automatically based on your site address.
 
 Click the **Copy URL** button next to the field to copy it to your clipboard.
 
 :::info
-
-Unlike some other payment gateways, you do not need to register the webhook URL in the Mollie Dashboard. J2Commerce passes the webhook URL directly to Mollie when creating each payment, so Mollie always knows where to send notifications without any extra setup.
-
+J2Commerce passes the webhook URL directly to Mollie each time it creates a payment. You do not need to register a static webhook endpoint in the Mollie Dashboard — Mollie always knows where to send notifications without any extra setup on your part.
 :::
 
 <!-- SCREENSHOT: Webhook URL field with Copy URL button visible -->
+
+---
+
+### Template
+
+**Template** — Select the visual layout for the payment step. Leave blank to use the default Bootstrap 5 layout that matches your store's appearance.
 
 ---
 
@@ -179,15 +192,25 @@ Unlike some other payment gateways, you do not need to register the webhook URL 
 
 ---
 
+### Order Value Restrictions
+
+| Field | Description |
+|-------|-------------|
+| **Minimum Order Subtotal** | Hide Mollie as a payment option when the cart subtotal is below this amount. Leave blank for no minimum. |
+| **Maximum Order Subtotal** | Hide Mollie when the cart subtotal is above this amount. Leave blank for no maximum. |
+
+---
+
 ### Surcharge
 
-Add an optional extra fee for customers who pay via Mollie. You can use a percentage, a fixed amount, or both together. Check your local laws before using surcharges — they are regulated in some countries.
+Add an optional extra fee for customers who pay via Mollie. Check your local laws before using surcharges — they are regulated in some countries.
 
-**Surcharge (%)** — A percentage of the order subtotal added as a surcharge.
-
-**Surcharge (Fixed)** — A flat amount added to every order.
-
-Both amounts are labeled **Mollie Payment Surcharge** on the customer's order summary.
+| Field | Description |
+|-------|-------------|
+| **Surcharge Label** | The name shown for the surcharge line item at checkout. Leave blank to use the default label "Mollie Payment Surcharge". |
+| **Surcharge (%)** | A percentage of the order subtotal added as a surcharge. |
+| **Surcharge (Fixed)** | A flat amount added to every order. |
+| **Surcharge Tax Class** | A tax profile to apply to the surcharge. Leave blank if no tax applies. |
 
 ---
 
@@ -233,9 +256,7 @@ Before a payment method appears at checkout, it must be active in your Mollie ac
 4. Some methods (for example, Klarna and Apple Pay) require additional verification steps — follow the prompts in Mollie.
 
 :::tip
-
 Payment methods are also shown based on the customer's location and the order currency. A customer in the Netherlands will see iDEAL; a customer in Belgium will see Bancontact. You do not need to configure this — Mollie handles it automatically.
-
 :::
 
 <!-- SCREENSHOT: Mollie Dashboard > Settings > Payment methods with several methods activated -->
@@ -294,29 +315,30 @@ When you are ready to accept real payments:
 
 ## Refunds
 
-You can issue a refund directly from the order in the J2Commerce admin:
+You can issue a full or partial refund directly from the order in the J2Commerce admin:
 
 1. Go to **J2Commerce** -> **Orders** and open the order.
 2. Look for the **Payment** section on the order detail screen.
-3. Click **Refund**.
-4. Enter the amount to refund, or leave blank to refund the full order.
-5. Confirm the refund.
+3. Click **Refund (Full)** to return the entire amount, or **Refund (Partial)** to enter a specific amount.
+4. Confirm the refund.
 
 J2Commerce sends the refund request to Mollie via the API. The customer receives their refund according to Mollie's processing timeline for their payment method (typically 2–5 business days for bank transfers, faster for card payments).
 
-<!-- SCREENSHOT: Order detail screen showing Payment section with Refund button -->
+If **Change Status on Refund** is enabled, the order status updates automatically after the refund is processed.
+
+<!-- SCREENSHOT: Order detail screen showing Payment section with Refund (Full) and Refund (Partial) buttons -->
 
 ---
 
-## Subscriptions and Recurring Payments
+## Saved Cards and Subscription Renewals
 
-If you use the **Subscription Product** app alongside Mollie Payments, the plugin supports automatic recurring billing:
+When **Enable Saved Cards** is turned on (the default), the plugin supports saved payment methods and automatic subscription renewals:
 
-- On the **first payment** of a subscription order, J2Commerce creates a Mollie customer record and requests a `sequenceType=first` payment. This sets up a mandate (billing authorization) in Mollie.
-- The customer's Mollie customer ID is stored in J2Commerce's payment profiles table so future renewals can reference it.
-- On each **renewal**, J2Commerce charges the stored customer profile using Mollie's recurring payment API — no redirect to Mollie is needed for subsequent billing cycles.
+- On the **first payment**, J2Commerce creates a Mollie customer record and establishes a billing mandate (authorization). The customer's Mollie profile is stored for future use.
+- On subsequent orders, logged-in customers see their saved payment method at checkout and can pay without re-entering details.
+- On each **subscription renewal**, J2Commerce charges the stored customer profile using Mollie's recurring payment API — no redirect to Mollie is needed for automatic billing cycles.
 
-This requires the customer to complete an initial payment that establishes the mandate. Without this, automatic renewals cannot be processed.
+This requires the J2Commerce **Subscription Product** app. The customer must complete an initial payment to establish the mandate before automatic renewals can be processed.
 
 ---
 
@@ -329,7 +351,7 @@ This requires the customer to complete an initial payment that establishes the m
 **Solution:**
 
 1. Verify the **API Key** in the plugin settings is correct and starts with `live_` or `test_`.
-2. Log in to the Mollie Dashboard **->** **Settings** **->** **Payment methods** and confirm at least one method is activated.
+2. Log in to the Mollie Dashboard -> **Settings** -> **Payment methods** and confirm at least one method is activated.
 3. Enable **Debug Mode** and check `administrator/logs/plg_j2commerce_payment_mollie.php` for API errors.
 
 ---
@@ -340,10 +362,10 @@ This requires the customer to complete an initial payment that establishes the m
 
 **Solution:**
 
-1. Confirm your site is publicly accessible over HTTPS — Mollie cannot deliver webhooks to a local development server or a site behind a password-protected staging environment.
-2. Mollie automatically retries webhook delivery on failure. Check the Mollie Dashboard **->** **Developers** **->** **Webhooks** (or the payment detail page) to see delivery attempts and any error codes.
+1. Confirm your site is publicly accessible over HTTPS — Mollie cannot deliver notifications to a local development server or a site behind a password-protected staging environment.
+2. Mollie automatically retries delivery on failure. Check the Mollie Dashboard -> **Developers** -> the payment detail page to see delivery attempts and any error codes.
 3. Enable **Debug Mode** and reproduce a test payment to see whether the webhook is being received and processed.
-4. Verify that no server firewall or CDN WAF rule is blocking POST requests to `index.php?option=com_ajax&...` from Mollie's IP ranges.
+4. Verify that no server firewall or CDN rule is blocking POST requests to `index.php?option=com_ajax&...` from Mollie's servers.
 
 ---
 
@@ -351,7 +373,7 @@ This requires the customer to complete an initial payment that establishes the m
 
 **Cause:** A `test_` key is in the field but the store expects live payments (or vice versa).
 
-**Solution:** The key prefix is the only environment selector. Check that the key in the **API Key** field matches your intent — `live_` for production, `test_` for testing. There is no separate sandbox toggle.
+**Solution:** The key prefix is the only environment selector. Check that the key in the **API Key** field matches your intent — `live_` for production, `test_` for testing.
 
 ---
 
@@ -363,19 +385,27 @@ This requires the customer to complete an initial payment that establishes the m
 
 ---
 
-### Customer canceled the payment but the order status did not update to Canceled
+### Customer canceled the payment but the order status did not update
 
-**Cause:** The customer closed the Mollie payment window without completing or explicitly canceling the payment. In this case the Mollie status is `canceled` (single l — Mollie's own spelling) and the webhook fires shortly after. If your site was unreachable, the webhook may not have been delivered yet.
+**Cause:** The customer closed the Mollie payment window without completing or explicitly canceling. Mollie fires a webhook shortly after, but if your site was unreachable the notification may not have arrived yet.
 
-**Solution:** Wait a few minutes for the Mollie webhook retry cycle. If the order status still shows the wrong state, open the order in **J2Commerce** -> **Orders** and manually update the status. Check the debug log for any webhook delivery failure.
+**Solution:** Wait a few minutes for the Mollie webhook retry cycle. If the order status still shows the wrong state, open the order in **J2Commerce** -> **Orders** and manually update the status. Check the debug log for any delivery failure.
 
 ---
 
 ### Surcharge not showing at checkout
 
-**Cause:** Surcharge fields are blank, or the order subtotal does not include the surcharge in the displayed total before the payment step.
+**Cause:** Surcharge fields are blank, or the values are set to zero.
 
 **Solution:** Verify that **Surcharge (%)** or **Surcharge (Fixed)** contains a numeric value in the plugin settings. Surcharges are applied when the customer selects Mollie as their payment method.
+
+---
+
+### Mollie Payments is not visible to some customers
+
+**Cause:** A Geo Zone restriction, Minimum Order Subtotal, or Maximum Order Subtotal setting is filtering out those customers.
+
+**Solution:** Check the **Geo Zone**, **Minimum Order Subtotal**, and **Maximum Order Subtotal** fields in the plugin settings. Leave them blank to show Mollie to all customers without restrictions.
 
 ---
 
@@ -404,7 +434,7 @@ Klarna Slice It is Klarna's installment payment option — the customer pays in 
 ## Related Topics
 
 - [Payment Methods overview](../payment-methods/index.md)
-- [Geozones](../localisation/geozones.md)
-- [Currencies](../localisation/currencies.md)
+- [Geozones](../localization/geozones.md)
+- [Currencies](../localization/currencies.md)
 - [Subscription Product app](../apps-and-extensions/apps/app_subscriptionproduct.md)
 - [Order management](../sales/orders.md)
