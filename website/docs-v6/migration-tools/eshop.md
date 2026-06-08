@@ -1,6 +1,6 @@
 # EShop Migration Adapter
 
-The EShop Migration Adapter is the source connector for the [J2Commerce Migrator](./com_j2commercemigrator.md) that lets you move your JoomDonation EShop store into J2Commerce 6. The adapter reads your existing EShop tables, transforms them into the J2Commerce format, and writes them into the correct J2Commerce tables — without touching or modifying your original EShop data at any point.
+The EShop Migration Adapter is the source connector for the [J2Commerce Migrator](./j2commercemigrator.md) that lets you move your JoomDonation EShop store into J2Commerce 6. The adapter reads your existing EShop tables, transforms them into the J2Commerce format, and writes them into the correct J2Commerce tables — without touching or modifying your original EShop data at any point.
 
 ## Requirements {#requirements}
 
@@ -68,7 +68,7 @@ The adapter migrates the following data from your EShop store to J2Commerce:
 | Coupons                                              | J2Commerce coupons                                                                   |
 | Vouchers                                             | J2Commerce vouchers                                                                  |
 | Orders, order items, order options                   | J2Commerce orders and order line items                                               |
-| Order downloads                                      | J2Commerce order download records                                                    |
+| Order downloads                                      | J2Commerce order download records                                                   |
 | Currencies, countries, zones                         | J2Commerce lookup tables                                                             |
 | Order statuses, lengths, weights                     | J2Commerce lookup tables                                                             |
 | Product reviews (if App Reviews installed)           | J2Commerce App Reviews records                                                       |
