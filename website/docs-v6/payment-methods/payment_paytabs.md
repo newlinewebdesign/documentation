@@ -142,7 +142,7 @@ Choose which card networks to accept. You can select multiple options:
 
 ### Allow Saved Cards
 
-When enabled, logged-in customers can tick a box at checkout to save their card for future orders. On their next purchase they can simply select the saved card instead of entering their details again. Saved cards are also used for automatic subscription renewal payments.
+When enabled, logged-in customers can tick a box at checkout to save their card for future orders. On their next purchase they can simply select the saved card instead of entering their details again. Saved cards are also used for automatic subscription renewal payments — see [Subscriptions & Recurring Billing](#subscriptions--recurring-billing) below for everything you need to set up before renewals can work.
 
 Set this to **No** if you prefer customers to always enter their card details fresh each time.
 
@@ -241,6 +241,47 @@ From the order screen you can issue a **full refund** (the entire order amount) 
 If a customer has saved cards on file and an order has not yet been paid, you can charge one of their saved cards directly from the order screen without the customer needing to log in and go through checkout again. This is useful for phone orders or subscription renewals that need manual intervention.
 
 <!-- SCREENSHOT: Admin order page showing Void, Refund, and Charge Stored Card action buttons -->
+
+---
+
+## Subscriptions & Recurring Billing
+
+PayTabs works with the **J2Commerce Memberships & Subscriptions** app to automatically rebill customers on each renewal cycle. When a customer first buys a subscription or membership, their card is tokenized (saved) during checkout. Every time a renewal comes due, the J2Commerce cron job charges that saved token directly — a merchant-initiated transaction that happens in the background with no redirect and no action required from the customer.
+
+### Prerequisites
+
+Three things must be in place before automatic renewals can fire:
+
+1. **Allow Saved Cards must be On.** A reusable token must exist for the customer. If there is no saved card on file for the subscriber, the renewal cannot be charged automatically.
+2. **The J2Commerce scheduled task must be running.** The cron job that triggers renewals on their due date must be active. Go to **System** -> **Scheduled Tasks** and confirm the J2Commerce renewal task is enabled and has a recent last-run time.
+3. **Recurring billing must be enabled on your PayTabs profile** — see the warning below. This is the step most merchants overlook.
+
+:::caution Recurring billing must be enabled on your PayTabs profile
+
+Recurring (token-based, server-to-server) charging is **not a self-service toggle** in the PayTabs merchant dashboard. It must be enabled on your specific merchant profile by PayTabs' team.
+
+**What to do:**
+
+Email **support@paytabs.com** (or contact your PayTabs account manager directly) and request that recurring / MIT (merchant-initiated transaction) charging be enabled. Include:
+
+- Your **Profile ID** (the numeric identifier from PayTabs portal -> Account Settings)
+- Your business need, for example: "I am using J2Commerce to sell subscription memberships and need recurring charges enabled so renewal payments can be processed automatically against saved customer card tokens."
+
+PayTabs will review your request and enable the feature on that profile. Until they do, every automatic renewal attempt will fail.
+
+:::
+
+### How to tell if recurring billing is not yet enabled
+
+If PayTabs has not yet enabled recurring on your profile, renewal attempts fail silently from the customer's perspective. In your store admin, open **J2Commerce** -> **Apps** -> **Memberships & Subscriptions** and review the renewal log for that subscriber. You will see a PayTabs error response with the message:
+
+> **Method/Class/Currency combination not supported** (response code 112)
+
+The renewal order will be created but remain in a **New** (unpaid) status, and the subscription record will be marked as failed or past-due. The card itself is fine — the issue is purely the profile-level restriction on the PayTabs side.
+
+Once PayTabs enables recurring on your profile, the next scheduled renewal attempt will go through normally. You do not need to change any setting in J2Commerce.
+
+<!-- SCREENSHOT: J2Commerce subscription renewal log showing a failed renewal with PayTabs error code 112 -->
 
 ---
 
