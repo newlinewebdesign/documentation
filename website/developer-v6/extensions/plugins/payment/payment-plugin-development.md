@@ -861,6 +861,8 @@ public function onPostPayment(Event $event): void
 }
 ```
 
+The value this `match` returns is rendered markup only — `CheckoutController::confirmPayment()` decides whether the payment finalized by reading the order row your plugin writes, not by inspecting this event's result (see [Finalizing the order on success](#finalizing-the-order-on-success)).
+
 ### Full payment flow
 
 ```mermaid
@@ -877,15 +879,17 @@ sequenceDiagram
     Checkout->>Plugin: onJ2CommercePostPayment(element, data)
     Plugin->>Plugin: Calls gateway API
     alt Success
-        Plugin->>Plugin: Updates Order table
+        Plugin->>Plugin: Updates Order table (order_state_id / transaction_status)
+        Note over Checkout,Plugin: This write is what confirmPayment() reads to decide whether<br/>to dispatch onJ2CommerceAfterPayment and send order emails -<br/>not the HTML/JSON this event returns
         Plugin->>Plugin: Adds order history entry
         Plugin-->>Checkout: redirect(paction=display)
         Checkout->>Plugin: onJ2CommercePostPayment(element, data)
         Plugin-->>Checkout: postpayment.php HTML
         Checkout->>Customer: Shows confirmation
     else Failure
+        Note over Plugin: No order write - order_state_id is left where confirmPayment() parked it
         Plugin-->>Checkout: message.php HTML (error)
-        Checkout->>Customer: Shows error
+        Checkout->>Customer: Shows error (no AfterPayment dispatched, no emails sent)
     end
 ```
 
@@ -938,6 +942,21 @@ Factory::getApplication()->redirect(
     )
 );
 ```
+
+### Why this matters: the write above is the success signal
+
+Since PR #2537 (fixing #2532), `CheckoutController::confirmPayment()` decides whether to dispatch `onJ2CommerceAfterPayment` and send the order confirmation emails by re-reading the order row after your `onJ2CommercePostPayment` handler returns — not by inspecting what that handler returned. Returning `postpayment.php` markup is what the shopper sees; on its own it has no effect on whether the order is treated as finalized. PR #2544 (fixing #2538) then resolved every status in that test by lifecycle [type](../order-status-types.md) rather than by id, so none of the rules below depend on the status ids a particular installation happens to carry.
+
+A plugin states that it finalized by writing any one of the following to the order row:
+
+- a new `order_state_id` — any value that differs from the one the order was parked at when checkout began processing the payment;
+- an `order_state_id` whose lifecycle type is finalized (`approved`, `shipped`, `delivered` or `complete`) — this one holds even when the value did **not** change, so a gateway posting back against an order that already sits in a finalized state still counts as having finalized it;
+- `transaction_status` of `Completed` or `authorized` (case-insensitive) — the pattern `finalizeOrder()` above already follows;
+- a re-primed `j2commerce.order_id` in user state, for a gateway that finalizes a different order than the session was primed with — an off-site return replacing a stale, abandoned order (#1208).
+
+None of them apply if the order's own lifecycle type is `failed` or `cancelled`: that is checked first and rejects the payment outright, so writing a declined state is how a plugin reports a failure.
+
+Before that fix, returning success markup from `onJ2CommercePostPayment` was on its own enough to trigger `AfterPayment` and the confirmation emails — a clause in the predicate was true for every POST. That clause was the underlying defect: it was equally true when a plugin returned *failure* markup, so a declined card could still produce a confirmation email. It no longer exists. A plugin that finalizes a charge without writing anything to the order row now gets neither `AfterPayment` nor an order email, silently. The fix for such a plugin is to record its outcome on the order row, not to look for a substitute signal in the event result — a plugin that writes nothing is equally unable to have its *failures* told apart from its successes by anything that reads the row, which is the same ambiguity described above.
 
 ### External gateway redirects
 
